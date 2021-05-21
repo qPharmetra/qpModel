@@ -26,8 +26,8 @@ source('~/rstudio/Code/qPmodelDevelopR.R')
 This is using the qPmodelDevelopR to construct a PK model.  This allows the user to custom define a model and turn it into a mrgsolve simuation ready model
 ```{r}
 
-baseModel = qpModel(odes = eqns(Aabs = -ka*Aabs, Acentral = ka*Aabs - (cl/V)*Acentral),
-                    params = eqns(ka = exp(tvka+etaka),cl = exp(tvcl+etacl),V = tvV + etaV),
+baseModel = qpModel(ode = eqns(Aabs = -ka*Aabs, Acentral = ka*Aabs - (cl/V)*Acentral),
+                    param = eqns(ka = exp(tvka+etaka),cl = exp(tvcl+etacl),V = tvV + etaV),
                     theta = eqns(tvka = 0.2, tvcl = 1, tvV = 20),
                     omega = eqns(etaka = 0.1, etacl = 0.2, etaV = 0.3),
                     sigma = eqns(ADD = 0.2, PROP = 0.2),
@@ -130,7 +130,7 @@ absMM = qp.abs.MM()
 
 model = twocpt + 
   absMM + 
-  theta(thetas = eqns(tvV = 2, tvCL = 3, tvQ = 0.5, tvV2 = 0.1, tvamax = 0.35, tvka50 = 0.05)) + omega(omegas = eqns(etaV = 0.1, etaCL = 0.2, etaQ = 0, etaV2 = 0, etaamax = 0,etaka50 = 0.1)) 
+  theta(theta = eqns(tvV = 2, tvCL = 3, tvQ = 0.5, tvV2 = 0.1, tvamax = 0.35, tvka50 = 0.05)) + omega(omega = eqns(etaV = 0.1, etaCL = 0.2, etaQ = 0, etaV2 = 0, etaamax = 0,etaka50 = 0.1)) 
 
 
 ```
@@ -196,7 +196,7 @@ ggplot(df,aes(x=time,y=IPRED,group=ID,color=ID)) +
 ```{r}
 
 tcammodel = qp.twocpt.iv.cl() + qp.abs.TCAM() + 
-  theta(thetas = eqns(tvV = 4.6, tvCL = 3.54, tvQ = 4.06, tvV2 = 3.5, tvmtt = 0.15, tvntr = -0.065, tvf1 = 0.9))
+  theta(theta = eqns(tvV = 4.6, tvCL = 3.54, tvQ = 4.06, tvV2 = 3.5, tvmtt = 0.15, tvntr = -0.065, tvf1 = 0.9))
 
 ```
 
@@ -259,7 +259,7 @@ ggplot(df,aes(x=time,y=IPRED,group=ID,color=ID)) +
 # three cpt clearance with first order and 0th order absorption
 ```{r}
 
-threecpt = qp.threecpt.oral.cl(thetas = eqns(tvV = 86.0799, tvV2 = 40.5079, tvCL = 22.8508, tvQ = 1.43427, tvQ2 = 1.68378, tvV3 = 12.9983)) + parameter(parameters = eqns(CL = tvCL*exp(etaCL),V = tvV, V2 = tvV2*exp(etaV2), Q = tvQ*exp(etaQ), V3 = tvV3, Q2 = tvQ2)) + 
+threecpt = qp.threecpt.oral.cl(theta = eqns(tvV = 86.0799, tvV2 = 40.5079, tvCL = 22.8508, tvQ = 1.43427, tvQ2 = 1.68378, tvV3 = 12.9983)) + parameter(parameters = eqns(CL = tvCL*exp(etaCL),V = tvV, V2 = tvV2*exp(etaV2), Q = tvQ*exp(etaQ), V3 = tvV3, Q2 = tvQ2)) + 
   qp.abs.zero.and.first.order()
 
 ```

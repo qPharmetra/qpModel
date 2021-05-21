@@ -10,7 +10,7 @@ Description: Supports parallel development of cross-compatible code
 License: GPL3
 Encoding: UTF-8
 LazyData: true
-Imports: stringr, magrittr, lazyeval
+Imports: stringr, magrittr, rlang
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
-Suggests: testthat (>= 2.1.0)
+Suggests: testthat (>= 2.1.0), knitr
