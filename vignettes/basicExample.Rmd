@@ -1,0 +1,320 @@
+---
+title: "qPmodelDevelopR"
+author: "qPharmetra"
+date: "8/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(qpToolkit)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(Rcpp)
+library(mrgsolve)
+
+source('~/rstudio/Code/qPmodelDevelopR.R')
+
+
+```
+
+
+# Utilize qPmodelDevelopR to create a custom model
+
+This is using the qPmodelDevelopR to construct a PK model.  This allows the user to custom define a model and turn it into a mrgsolve simuation ready model
+```{r}
+
+baseModel = qpModel(odes = eqns(Aabs = -ka*Aabs, Acentral = ka*Aabs - (cl/V)*Acentral),
+                    params = eqns(ka = exp(tvka+etaka),cl = exp(tvcl+etacl),V = tvV + etaV),
+                    theta = eqns(tvka = 0.2, tvcl = 1, tvV = 20),
+                    omega = eqns(etaka = 0.1, etacl = 0.2, etaV = 0.3),
+                    sigma = eqns(ADD = 0.2, PROP = 0.2),
+                    observe = eqns(IPRED = Acentral/V, DV = IPRED*(1+PROP)+ADD), 
+                    output = eqns(IPRED,DV))
+
+```
+
+
+create a Rcpp model from the developR for mrgsolve and load it
+```{r}
+
+modelCreate_R(baseModel)
+
+mod = mread(model = "pkmodel",file = "model.txt")
+
+```
+
+Another method to load the file is to provided:
+copy the text from the file and subsequently load it via mcode 
+
+```{r, include = FALSE}
+modelfile2 = ' 
+$PARAM
+tvka = 0.2, tvcl = 1, tvV = 20
+$CMT Aabs Acentral
+$MAIN
+double ka = exp(tvka + etaka) ;
+double cl = exp(tvcl + etacl) ;
+double V = tvV + etaV ;
+$OMEGA @labels etaka etacl etaV
+0.1 0.2 0.3
+$ODE
+dxdt_Aabs = -ka * Aabs;
+dxdt_Acentral = ka * Aabs - (cl/V) * Acentral;
+$SIGMA @labels  ADD PROP
+0.2 0.2
+$TABLE
+double IPRED  =  Acentral/V ;
+double DV  =  IPRED * (1 + PROP) + ADD ;
+$CAPTURE IPRED DV etacl
+'
+
+modcopy = mcode("pkmodel",modelfile2)
+
+
+```
+
+## run simulation of the model
+
+```{r}
+
+Nsub = 100
+dose = 100
+id.df = data.frame("ID" = 1:Nsub)
+
+data = id.df %>%
+  mutate(evid = 1,
+         cmt = 1,
+         amt = dose,
+         time = 0,
+         etacl = 0)
+
+# set up simulation criteria: end time and sample times
+sim_time = 24
+timetick = 0.1
+
+# run simulation
+out <- mod %>%
+  data_set(data) %>%
+  #idata_set(inddata) %>%
+  mrgsim(end=sim_time,delta=timetick, obsonly=TRUE) # Simulate 100 observations, independent of the total simulated time
+
+### Output of simulation to dataframe
+df <- as.data.frame(out)
+
+```
+
+## plot simulation results
+
+```{r}
+
+ggplot(df,aes(x=time,y=IPRED,group=ID)) + 
+  geom_point() + 
+  geom_line() + 
+  theme_classic() + 
+  xlab("Time (hr)") + 
+  ylab("Concentration")
+
+
+```
+
+# Utilize qPmodelDevelopR blocks to create model
+
+
+```{r}
+
+twocpt = qp.twocpt.iv.cl()
+absMM = qp.abs.MM()
+
+model = twocpt + 
+  absMM + 
+  theta(thetas = eqns(tvV = 2, tvCL = 3, tvQ = 0.5, tvV2 = 0.1, tvamax = 0.35, tvka50 = 0.05)) + omega(omegas = eqns(etaV = 0.1, etaCL = 0.2, etaQ = 0, etaV2 = 0, etaamax = 0,etaka50 = 0.1)) 
+
+
+```
+
+
+```{r}
+
+modelCreate_R(model,filename = "combine.txt")
+
+modnew = mread(model = "pkmodel2",file = "combine.txt")
+
+```
+
+
+## run simulation of the block created model
+
+```{r}
+
+Nsub = 100
+dose = 100
+id.df = data.frame("ID" = 1:Nsub)
+
+data = id.df %>%
+  mutate(evid = 1,
+         cmt = 3,
+         amt = dose,
+         time = 0,
+         etacl = 0)
+
+# set up simulation criteria: end time and sample times
+sim_time = 24*7
+timetick = 0.1
+
+# run simulation
+out <- modnew %>%
+  data_set(data) %>%
+  #idata_set(inddata) %>%
+  mrgsim(end=sim_time,delta=timetick, obsonly=TRUE) # Simulate 100 observations, independent of the total simulated time
+
+### Output of simulation to dataframe
+df <- as.data.frame(out)
+
+```
+
+
+## plot simulation results
+
+```{r}
+
+ggplot(df,aes(x=time,y=IPRED,group=ID,color=ID)) + 
+  geom_point() + 
+  geom_line() + 
+  theme_classic() + 
+  xlab("Time (hr)") + 
+  ylab("Concentration")
+
+
+```
+
+
+# TCAM model development
+
+```{r}
+
+tcammodel = qp.twocpt.iv.cl() + qp.abs.TCAM() + 
+  theta(thetas = eqns(tvV = 4.6, tvCL = 3.54, tvQ = 4.06, tvV2 = 3.5, tvmtt = 0.15, tvntr = -0.065, tvf1 = 0.9))
+
+```
+
+
+```{r}
+
+modelCreate_R(tcammodel,filename = "tcam.txt")
+
+tcammod = mread(model = "tcam",file = "tcam.txt")
+
+```
+
+
+## run simulation of TCAM
+
+```{r}
+
+Nsub = 100
+dose = 80*1000
+id.df = data.frame("ID" = 1:Nsub)
+
+data = id.df %>%
+  mutate(evid = 1,
+         cmt = 1,
+         amt = dose,
+         time = 0,
+         etacl = 0,
+         Amt = dose)
+
+# set up simulation criteria: end time and sample times
+sim_time = 24*1
+timetick = 0.1
+
+# run simulation
+out <- tcammod %>%
+  data_set(data) %>%
+  #idata_set(inddata) %>%
+  mrgsim(end=sim_time,delta=timetick, obsonly=TRUE) # Simulate 100 observations, independent of the total simulated time
+
+### Output of simulation to dataframe
+df <- as.data.frame(out)
+
+```
+
+
+## plot simulation results
+
+```{r}
+
+ggplot(df,aes(x=time,y=IPRED,group=ID,color=ID)) + 
+  geom_point() + 
+  geom_line() + 
+  theme_bw() + 
+  xlab("Time (hr)") + 
+  ylab("Concentration")
+
+
+```
+
+# three cpt clearance with first order and 0th order absorption
+```{r}
+
+threecpt = qp.threecpt.oral.cl(thetas = eqns(tvV = 86.0799, tvV2 = 40.5079, tvCL = 22.8508, tvQ = 1.43427, tvQ2 = 1.68378, tvV3 = 12.9983)) + parameter(parameters = eqns(CL = tvCL*exp(etaCL),V = tvV, V2 = tvV2*exp(etaV2), Q = tvQ*exp(etaQ), V3 = tvV3, Q2 = tvQ2)) + 
+  qp.abs.zero.and.first.order()
+
+```
+
+```{r}
+
+modelCreate_R(threecpt,filename = "threecpt.txt")
+
+threecptmod = mread(model = "threecpt",file = "threecpt.txt")
+
+```
+
+
+## run simulation of three cpt
+
+```{r}
+
+Nsub = 1
+DOSE = 10
+dose = 1657*DOSE
+id.df = data.frame("ID" = 1:Nsub)
+
+data = id.df %>%
+  mutate(evid = 1,
+         cmt = 1,
+         amt = dose,
+         time = 0
+         )
+
+# set up simulation criteria: end time and sample times
+sim_time = 24*1
+timetick = 0.1
+
+# run simulation
+out <- threecptmod %>%
+  data_set(data) %>%
+  #idata_set(inddata) %>%
+  mrgsim(end=sim_time,delta=timetick, obsonly=TRUE) # Simulate 100 observations, independent of the total simulated time
+
+### Output of simulation to dataframe
+df <- as.data.frame(out)
+
+```
+
+
+## plot simulation results
+
+```{r}
+
+ggplot(df,aes(x=time,y=IPRED,group=ID,color=ID)) + 
+  geom_point() + 
+  geom_line() + 
+  theme_bw() + 
+  xlab("Time (hr)") + 
+  ylab("Concentration")
+
+
+```

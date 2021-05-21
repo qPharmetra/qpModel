@@ -1,11 +1,16 @@
 Package: qpModel
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Coordinated Development for NONMEM and mrgsolve
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Brett Matzuka
+Maintainer: Brett Matzuka <brett.matzuka@qpharmetra.com>
+BugReports: https://github.com/qpharmetra/qpModel/issues
+Description: Supports parallel development of cross-compatible code
+  for 'NONMEM' control streams and 'mrgsolve' simulations.
+License: GPL3
 Encoding: UTF-8
 LazyData: true
+Imports: stringr, magrittr, lazyeval
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
+Suggests: testthat (>= 2.1.0)
