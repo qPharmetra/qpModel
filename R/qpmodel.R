@@ -71,7 +71,7 @@ eqns <- function(...){
 #' @examples
 #' eqns.make()
 eqns.make <- function(...) {
-  structure(list(calls = arg), class = 'eqns')
+  structure(list(calls = list(...)), class = 'eqns')
 }
 
 #' Make an Equation
