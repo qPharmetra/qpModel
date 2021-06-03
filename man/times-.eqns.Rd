@@ -16,13 +16,8 @@ Multiplies equations.
 }
 \seealso{
 Other operators: 
-\code{\link{*.eqn}()},
 \code{\link{*.qpmodel}()},
 \code{\link{+.eqns}()},
-\code{\link{+.eqn}()},
-\code{\link{+.qpmodel}()},
-\code{\link{-.eqn}()},
-\code{\link{/.eqn}()},
-\code{\link{^.eqn}()}
+\code{\link{+.qpmodel}()}
 }
 \concept{operators}

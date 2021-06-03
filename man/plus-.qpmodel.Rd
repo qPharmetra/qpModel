@@ -17,12 +17,7 @@ Adds 'qpmodel'.
 \seealso{
 Other operators: 
 \code{\link{*.eqns}()},
-\code{\link{*.eqn}()},
 \code{\link{*.qpmodel}()},
-\code{\link{+.eqns}()},
-\code{\link{+.eqn}()},
-\code{\link{-.eqn}()},
-\code{\link{/.eqn}()},
-\code{\link{^.eqn}()}
+\code{\link{+.eqns}()}
 }
 \concept{operators}

@@ -97,72 +97,7 @@ eqn_ <- function(x) {
   out
 }
 
-#' Add to Equation
-#'
-#' Adds to equations.
-#' @export
-#' @family operators
-#' @param e1 equation 1
-#' @param e2 equation 2
-`+.eqn` <- function(e1, e2) {
-  neweq = parse(text = paste('(', e1$instring, ')+(', e2$instring, ')'))
-  eqn_(neweq)
 
-}
-
-#' Subtract from Equation
-#'
-#' Subtracts from equations
-#' @export
-#' @family operators
-#' @param e1 equation 1
-#' @param e2 equation 2
-`-.eqn` <- function(e1, e2) {
-  neweq = parse(text = paste('(', e1$instring, ')-(', e2$instring, ')'))
-  eqn_(neweq)
-
-}
-
-#' Multiply Equation
-#'
-#' Multiplies equation.
-#' @export
-#' @family operators
-#' @param e1 equation 1
-#' @param e2 equation 2
-`*.eqn` <- function(e1, e2) {
-  neweq = parse(text = paste('(', e1$instring, ')*(', e2$instring, ')'))
-  eqn_(neweq)
-
-}
-
-#' Divide Equation
-#'
-#' Divides equation.
-#' @export
-#' @family operators
-#' @param e1 equation 1
-#' @param e2 equation 2
-`/.eqn` <- function(e1, e2) {
-  neweq <- parse(text = paste('(', e1$instring, ')/(', e2$instring, ')'))
-  eqn_(neweq)
-
-
-}
-
-#' Exponentiate Equation
-#'
-#' Exponentiates equation.
-#' @export
-#' @family operators
-#' @param e1 equation 1
-#' @param e2 equation 2
-
-`^.eqn` <- function(e1, e2) {
-  neweq <- parse(text = paste('(', e1$instring, ')^(', e2$instring, ')'))
-  eqn_(neweq)
-
-}
 
 #' Add to Equations
 #'
