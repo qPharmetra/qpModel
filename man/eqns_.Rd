@@ -14,7 +14,6 @@ Converts equations to calls.
 }
 \seealso{
 Other eqns: 
-\code{\link{eqns.make}()},
 \code{\link{eqns}()}
 }
 \concept{eqns}

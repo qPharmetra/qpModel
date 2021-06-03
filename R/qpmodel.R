@@ -1,3 +1,12 @@
+globalVariables(c(
+'A2periph', 'Aabs', 'Acentral', 'Aperiph', 'CL', 'DV', 'IPRED', 'LF1', 'MTT', 'NTR', 'Q', 'Q2', 'V', 'V2', 'V3',
+'abs0', 'add', 'amax', 'cl', 'elim', 'etaCL', 'etaQ', 'etaQ2', 'etaV', 'etaV2', 'etaV3', 'etaamax', 'etacl',
+'etaf1', 'etak0', 'etak12', 'etak13', 'etak21', 'etak31', 'etaka', 'etaka50', 'etake', 'etakm50',
+'etakmax', 'etamtt', 'etantr', 'inpt', 'k0', 'k12', 'k13', 'k21', 'k31', 'ka', 'ka50', 'ke', 'km50', 'kmax',
+'prop', 'str_replace', 'tvCL', 'tvQ', 'tvQ2', 'tvV', 'tvV2', 'tvV3', 'tvamax', 'tvcl', 'tvf1', 'tvk0',
+'tvk12', 'tvk13', 'tvk21', 'tvk31', 'tvka', 'tvka50', 'tvke', 'tvkm50', 'tvkmax', 'tvmtt', 'tvntr'
+))
+
 #' Create a qpModel
 
 #' Creates an object of class 'qpmodel', convertible
@@ -61,26 +70,13 @@ eqns <- function(...){
   exprns <- enexprs(...)
   structure(list(calls = exprns), class = 'eqns')
 }
-
-#' Make Equations
-#'
-#' Makes equations. Similar to \code{\link{eqns}} but with standard evaluation of arguments.
-#' @param ... conventional arguments
-#' @export
-#' @family eqns
-#' @examples
-#' eqns.make()
-eqns.make <- function(...) {
-  structure(list(calls = list(...)), class = 'eqns')
-}
-
 #' Make an Equation
 #'
 #' Makes a single equation of class 'eqn'.
 #'
 #' @param arg instance of class 'call'
-#' @export
 #' @family eqn
+
 eqn.make <- function(arg) {
   # arg is a class::call
 
@@ -92,20 +88,6 @@ eqn.make <- function(arg) {
     vars = all.vars(arg)
   ),
   class = 'eqn')
-}
-
-#' Make Equation.
-#'
-#' Makes an equation.
-#' @seealso eqn.make
-#' @importFrom rlang enexpr
-#' @export
-eqn <- function(arg){
-  # arg is an expression
-  exprn <- enexpr(arg)
-  eqn.make(exprn)
-  #instring = deparse(arg)
-  #structure(list(call = exprn,instring = instring),class='eqn')
 }
 
 #' Convert Equation to a Call
@@ -130,7 +112,6 @@ eqn_ <- function(arg) {
 #'
 #' Converts equations to calls.
 #' @param ... equations
-#' @export
 #' @family eqns
 eqns_ <- function(...) {
   # arg is a expression
@@ -215,8 +196,8 @@ eqns_ <- function(...) {
 #' Adds to equations.
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
+#' @param eqns1 equation 1
+#' @param eqns2 equation 2
 `+.eqns` <- function(eqns1, eqns2) {
   # set up new eqns object
   neweqns <- eqns()
@@ -234,13 +215,15 @@ eqns_ <- function(...) {
 
 }
 
-#' Miltiply Equations
+
+
+#' Multiply Equations
 #'
 #' Multiplies equations.
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
+#' @param eqns1 equation 1
+#' @param eqns2 equation 2
 `*.eqns` <- function(eqns1, eqns2) {
   # set up new eqns object
   neweqns <- eqns()
@@ -433,7 +416,7 @@ modelCreate_R <- function(
   filemodel <- file(filename)
 
   ## start writing model code for mrgsolve
-  writeLines(c('modelfile =  '), filemodel)
+  #writeLines(c('modelfile =  '), filemodel)
 
   ## create parameter list
   finalparams <- paste(names(qpmodel$theta$calls), '=', qpmodel$theta$calls)
@@ -461,13 +444,17 @@ modelCreate_R <- function(
   )
 
   ## create Algebraic eqns
-  algebra <- paste(
-    'double',
-    names(qpmodel$algebraic$calls),
-    '=',
-    qpmodel$algebraic$calls,
-    ';'
-  )
+  algebra <- character(0)
+
+  if(length(qpmodel$algebraic$calls)){
+    algebra <- paste(
+      'double',
+      names(qpmodel$algebraic$calls),
+      '=',
+      qpmodel$algebraic$calls,
+      ';'
+    )
+  }
 
   ## create SIGMA
   sigma <- paste(qpmodel$sigma$calls)
@@ -489,7 +476,7 @@ modelCreate_R <- function(
   }
 
   ## create table output
-  capture <- paste(names(qpmodel$output$calls))
+  capture <- paste(qpmodel$output$calls)
 
   ### TCAM components
 
@@ -511,57 +498,86 @@ modelCreate_R <- function(
 
 
   #####  write components to file #####
-  more <- function(x, sep = '\n')cat(x, file = filename, sep = sep, append = TRUE)
+
+  more <- function(x = '\n', sep = '\n', append = TRUE){
+    cat(x, file = filename, sep = sep, append = append)
+  }
+
+  # initialize the file
+  more('', sep = '', append = FALSE)
+
   # write GLOBAL
-  more('$GLOBAL')
-  more(tcamglobe)
+  if(length(tcamglobe)){
+    more('$GLOBAL')
+    more(tcamglobe)
+    more()
+  }
 
   # write parameters
-  more('',)
-  more('$PARAM')
-  more(finalparams, sep = ', ')
+  if(length(finalparams)){
+    more('$PARAM')
+    more(finalparams, sep = ', ')
+    more()
+  }
 
   # write compartments
-  more('')
-  more('$CMT ', sep = ' ')
-  more(finalcmts, sep = ' ')
+  if(length(finalcmts)){
+    more('$CMT ', sep = ' ')
+    more(finalcmts, sep = ' ')
+    more()
+  }
 
   # write MAIN
-  more('')
-  more('$MAIN')
-  more(finalmain)
-  more(tcammain)
+  if(length(finalmain)){
+    more('$MAIN')
+    if(length(finalmain)) more(finalmain)
+    if(length(tcammain)) more(tcammain)
+    more('')
+  }
+
 
   # write OMEGA
-  more('$OMEGA @labels', sep = ' ')
-  more(' ',sep = ' ')
-  more(names(qpmodel$omega$calls), sep = ' ')
-  more('')
-  more(omega,sep = ' ')
+  if(length(omega)){
+    more('$OMEGA @labels', sep = ' ')
+    more(' ',sep = ' ')
+    more(names(qpmodel$omega$calls), sep = ' ')
+    more()
+    more(omega,sep = ' ')
+    more()
+  }
 
   # write ODEs
-  more('')
-  more('$ODE')
-  more(tcamode)
-  more(algebra)
-  more(ode)
+  if(length(tcamode) | length(algebra) | length(ode)){
+    more('$ODE')
+    if(length(tcamode)) more(tcamode)
+    if(length(algebra)) more(algebra)
+    if(length(ode)) more(ode)
+    more('')
+  }
 
   # write SIGMA
-  more('$SIGMA @labels ', sep = ' ')
-  more(' ', sep = ' ')
-  more(names(qpmodel$sigma$calls),sep = ' ')
-  more('')
-  more(sigma, sep = ' ')
+  if(length(sigma)){
+    more('$SIGMA @labels ', sep = ' ')
+    more(' ', sep = ' ')
+    more(names(qpmodel$sigma$calls),sep = ' ')
+    more()
+    more(sigma, sep = ' ')
+    more()
+  }
 
   # write TABLE
-  more('')
-  more('$TABLE')
-  more(table)
+  if(length(table)){
+    more('$TABLE')
+    more(table)
+    more('')
+  }
 
   # write CAPTURE
-  more('$CAPTURE ', sep = ' ')
-  more(capture, sep = ' ')
-  more('')
+  if(length(capture)){
+    more('$CAPTURE ', sep = ' ')
+    more(capture, sep = ' ')
+    more('')
+  }
   close(filemodel)
 }
 
@@ -674,23 +690,23 @@ modelCreate_NM <- function(
   more(NMcmts, sep = '  ')
 
   ## write PK block
-  more('')
+  more()
   more('$PK')
   more(theta_param)
   more(mu_params)
   more(final_params)
-  more('')
+  more()
   more(tcamglobenm)
 
   ## write DES block
-  more('')
+  more()
   more('$DES')
   more(tcamodenm)
-  more('')
+  more()
   more(states)
   more(algebra)
   more(des)
-  more('')
+  more()
 
   ## write ERROR block
   more('$ERROR')

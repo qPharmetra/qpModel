@@ -17,7 +17,6 @@ eqns()
 }
 \seealso{
 Other eqns: 
-\code{\link{eqns.make}()},
 \code{\link{eqns_}()}
 }
 \concept{eqns}

@@ -1,16 +1,16 @@
 Package: qpModel
 Type: Package
 Title: Coordinated Development for NONMEM and mrgsolve
-Version: 0.1.0
+Version: 0.1.1
 Author: Brett Matzuka
 Maintainer: Brett Matzuka <brett.matzuka@qpharmetra.com>
 BugReports: https://github.com/qpharmetra/qpModel/issues
 Description: Supports parallel development of cross-compatible code
   for 'NONMEM' control streams and 'mrgsolve' simulations.
-License: GPL3
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: stringr, magrittr, rlang
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
-Suggests: testthat (>= 2.1.0), knitr
+Suggests: testthat (>= 2.1.0), knitr, dplyr, ggplot2, mrgsolve, rmarkdown

@@ -2,14 +2,14 @@
 % Please edit documentation in R/qpmodel.R
 \name{*.eqns}
 \alias{*.eqns}
-\title{Miltiply Equations}
+\title{Multiply Equations}
 \usage{
 \method{*}{eqns}(eqns1, eqns2)
 }
 \arguments{
-\item{eq1}{equation 1}
+\item{eqns1}{equation 1}
 
-\item{eq2}{equation 2}
+\item{eqns2}{equation 2}
 }
 \description{
 Multiplies equations.
