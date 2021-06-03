@@ -71,31 +71,6 @@ eqns <- function(...){
   structure(list(calls = exprns), class = 'eqns')
 }
 
-#' Convert Equation to a Call
-#'
-#' Converts an equation to a call of class 'eqn'.
-#'
-#' @param x an equation
-#' @family eqn
-#' @return eqn
-#'
-eqn_ <- function(x) {
-  # arg is a expression
-
-  # this converts arg into a call
-  x$new <- x
-  x <- x[[1]]
-  instring <- deparse(x)
-  out <- structure(
-    list(
-      call = x,
-      instring = instring,
-      vars = all.vars(x)
-    ),
-    class = 'eqn'
-  )
-  out
-}
 
 
 
@@ -122,8 +97,6 @@ eqn_ <- function(x) {
   structure(list(calls = neweqns$calls), class = 'eqns')
 
 }
-
-
 
 #' Multiply Equations
 #'
