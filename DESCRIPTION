@@ -1,7 +1,7 @@
 Package: qpModel
 Type: Package
 Title: Coordinated Development for NONMEM and mrgsolve
-Version: 0.1.1
+Version: 0.1.2
 Author: Brett Matzuka
 Maintainer: Brett Matzuka <brett.matzuka@qpharmetra.com>
 BugReports: https://github.com/qpharmetra/qpModel/issues

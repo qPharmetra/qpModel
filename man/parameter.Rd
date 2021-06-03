@@ -4,10 +4,10 @@
 \alias{parameter}
 \title{Update Parameter Definitions}
 \usage{
-parameter(param = eqns())
+parameter(...)
 }
 \arguments{
-\item{param}{parameters}
+\item{...}{parameters}
 }
 \description{
 Updates parameter definitions.

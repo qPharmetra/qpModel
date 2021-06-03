@@ -4,10 +4,10 @@
 \alias{ode}
 \title{Update ODE}
 \usage{
-ode(ode = eqns())
+ode(...)
 }
 \arguments{
-\item{ode}{ondinary differential equations}
+\item{...}{ondinary differential equations}
 }
 \description{
 Updates ODEs.

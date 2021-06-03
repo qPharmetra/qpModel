@@ -4,10 +4,10 @@
 \alias{sigma}
 \title{Update Sigmas}
 \usage{
-sigma(sigma = eqns())
+sigma(...)
 }
 \arguments{
-\item{sigma}{first level random effects}
+\item{...}{first level random effects}
 }
 \description{
 Updates sigma.

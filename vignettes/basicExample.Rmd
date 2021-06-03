@@ -129,7 +129,7 @@ out <- mod %>%
 ## Plot
 ```{r}
 ggplot(out,aes(x=time,y=IPRED,group=ID)) + 
-  geom_point() + 
+  #geom_point() + 
   geom_line() + 
   theme_classic() + 
   xlab("Time (hr)") + 
@@ -149,24 +149,20 @@ model <-
   twocpt + 
   absMM + 
   theta(
-    theta = eqns(
-      tvV = 2, 
-      tvCL = 3, 
-      tvQ = 0.5, 
-      tvV2 = 0.1, 
-      tvamax = 0.35, 
-      tvka50 = 0.05
-    )
+    tvV = 2, 
+    tvCL = 3, 
+    tvQ = 0.5, 
+    tvV2 = 0.1, 
+    tvamax = 0.35, 
+    tvka50 = 0.05
   ) + 
   omega(
-    omega = eqns(
-      etaV = 0.1, 
-      etaCL = 0.2, 
-      etaQ = 0, 
-      etaV2 = 0, 
-      etaamax = 0,
-      etaka50 = 0.1
-    )
+    etaV = 0.1, 
+    etaCL = 0.2, 
+    etaQ = 0, 
+    etaV2 = 0, 
+    etaamax = 0,
+    etaka50 = 0.1
   ) 
 
 modelCreate_R(model,filename = "combine.txt")
@@ -200,7 +196,7 @@ out <- modnew %>%
 ## Plot
 ```{r}
 ggplot(out,aes(x=time,y=IPRED,group=ID)) + 
-  geom_point() + 
+  #geom_point() + 
   geom_line() + 
   theme_classic() + 
   xlab("Time (hr)") + 
@@ -218,15 +214,13 @@ tcammodel <-
   qp.twocpt.iv.cl() + 
   qp.abs.TCAM() + 
   theta(
-    theta = eqns(
-      tvV = 4.6, 
-      tvCL = 3.54, 
-      tvQ = 4.06, 
-      tvV2 = 3.5, 
-      tvmtt = 0.15, 
-      tvntr = -0.065, 
-      tvf1 = 0.9
-    )
+    tvV = 4.6, 
+    tvCL = 3.54, 
+    tvQ = 4.06, 
+    tvV2 = 3.5, 
+    tvmtt = 0.15, 
+    tvntr = -0.065, 
+    tvf1 = 0.9
   )
 
 modelCreate_R(tcammodel,filename = "tcam.txt")
@@ -276,26 +270,23 @@ ggplot(out,aes(x=time,y=IPRED,group=ID)) +
 ## Create
 
 ```{r}
-
 threecpt <- 
-  qp.threecpt.oral.cl(
-    theta = eqns(
-      tvV = 86.0799, 
-      tvV2 = 40.5079, 
-      tvCL = 22.8508, 
-      tvQ = 1.43427, 
-      tvQ2 = 1.68378, 
-      tvV3 = 12.9983)
+  qp.threecpt.oral.cl() +
+  theta(
+    tvV = 86.0799, 
+    tvV2 = 40.5079, 
+    tvCL = 22.8508, 
+    tvQ = 1.43427, 
+    tvQ2 = 1.68378, 
+    tvV3 = 12.9983
   ) + 
   parameter(
-    param = eqns(
-      CL = tvCL*exp(etaCL),
-      V = tvV, 
-      V2 = tvV2*exp(etaV2), 
-      Q = tvQ*exp(etaQ), 
-      V3 = tvV3, 
-      Q2 = tvQ2
-    )
+    CL = tvCL*exp(etaCL),
+    V = tvV, 
+    V2 = tvV2*exp(etaV2), 
+    Q = tvQ*exp(etaQ), 
+    V3 = tvV3, 
+    Q2 = tvQ2
   ) + 
   qp.abs.zero.and.first.order()
 

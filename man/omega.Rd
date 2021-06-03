@@ -4,10 +4,10 @@
 \alias{omega}
 \title{Update Omegas}
 \usage{
-omega(omega = eqns())
+omega(...)
 }
 \arguments{
-\item{omega}{second level random effects}
+\item{...}{second level random effects}
 }
 \description{
 Updates omega.

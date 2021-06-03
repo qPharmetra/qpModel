@@ -4,10 +4,10 @@
 \alias{theta}
 \title{Update Thetas}
 \usage{
-theta(theta = eqns())
+theta(...)
 }
 \arguments{
-\item{theta}{fixed effects}
+\item{...}{fixed effects}
 }
 \description{
 Updates theta.

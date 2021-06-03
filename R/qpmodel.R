@@ -96,7 +96,6 @@ eqn.make <- function(arg) {
 #'
 #' @param arg an equation
 #' @family eqn
-#' @export
 #'
 eqn_ <- function(arg) {
   # arg is a expression
@@ -106,22 +105,6 @@ eqn_ <- function(arg) {
   arg <- arg[[1]]
   eqn.make(arg)
   #structure(list(call = arg),class='eqn')
-}
-
-#' Convert Equations to Calls
-#'
-#' Converts equations to calls.
-#' @param ... equations
-#' @family eqns
-eqns_ <- function(...) {
-  # arg is a expression
-  exprns = enexprs(...)
-
-  # this converts arg into a call
-  exprns$new <- exprns
-  exprns <- exprns[length(match.call) - 1]
-  #eqn.make(exprns)
-  structure(list(calls = exprns), class = 'eqns')
 }
 
 #' Add to Equation
@@ -262,15 +245,6 @@ eqns_ <- function(...) {
   qpnew$global <- qp1$global + qp2$global
   qpnew$custom <- qp1$custom + qp2$custom
 
-  #odesnew <- eqn_(odesnew)
-
-  #qp1$ode <- qp1$ode + qp2$ode
-  #qp1$algebraic <- qp1$algebraic + qp2$algebraic
-  #qp1$param <- qp1$param + qp2$param
-  #qp1$theta <- qp1$theta + qp2$theta
-  #qp1$omega <- qp1$omega + qp2$omega
-  #qp1$sigma <- qp1$sigma + qp2$omega
-
   qpModel(
     qpnew$ode,
     qpnew$algebraic,
@@ -312,15 +286,6 @@ eqns_ <- function(...) {
   qpnew$output <- qp1$output * qp2$output
   qpnew$global <- qp1$global * qp2$global
   qpnew$custom <- qp1$custom * qp2$custom
-
-  #odesnew <- eqn_(odesnew)
-
-  #qp1$ode <- qp1$ode + qp2$ode
-  #qp1$algebraic <- qp1$algebraic + qp2$algebraic
-  #qp1$param <- qp1$param + qp2$param
-  #qp1$theta <- qp1$theta + qp2$theta
-  #qp1$omega <- qp1$omega + qp2$omega
-  #qp1$sigma <- qp1$sigma + qp2$omega
 
   qpModel(
     qpnew$ode,
@@ -1745,9 +1710,9 @@ sigma = eqns(add = 0, prop = 0)
 #' Updates theta.
 #' @export
 #' @family updates
-#' @param theta fixed effects
-theta <- function(theta = eqns()) {
-  qpModel(theta = theta)
+#' @param ... fixed effects
+theta <- function(...) {
+  qpModel(theta = eqns(...))
 }
 
 #' Update Omegas
@@ -1755,19 +1720,19 @@ theta <- function(theta = eqns()) {
 #' Updates omega.
 #' @export
 #' @family updates
-#' @param omega second level random effects
-omega <- function(omega = eqns()) {
-  qpModel(omega = omega)
+#' @param ... second level random effects
+omega <- function(...) {
+  qpModel(omega = eqns(...))
 }
 
 #' Update Sigmas
 #'
 #' Updates sigma.
-#' @param sigma first level random effects
+#' @param ... first level random effects
 #' @export
 #' @family updates
-sigma <- function(sigma = eqns()) {
-  qpModel(sigma = sigma)
+sigma <- function(...) {
+  qpModel(sigma = eqns(...))
 }
 
 #' Update Parameter Definitions
@@ -1775,9 +1740,9 @@ sigma <- function(sigma = eqns()) {
 #' Updates parameter definitions.
 #' @export
 #' @family updates
-#' @param param parameters
-parameter <- function(param = eqns()) {
-  qpModel(param = param)
+#' @param ... parameters
+parameter <- function(...) {
+  qpModel(param = eqns(...))
 }
 
 #' Update ODE
@@ -1785,7 +1750,7 @@ parameter <- function(param = eqns()) {
 #' Updates ODEs.
 #' @export
 #' @family updates
-#' @param ode ondinary differential equations
-ode <- function(ode = eqns()) {
-  qpModel(ode = ode)
+#' @param ... ondinary differential equations
+ode <- function(...) {
+  qpModel(ode = eqns(...))
 }

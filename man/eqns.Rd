@@ -15,8 +15,4 @@ Generates equations. See vignettes.
 \examples{
 eqns()
 }
-\seealso{
-Other eqns: 
-\code{\link{eqns_}()}
-}
 \concept{eqns}
