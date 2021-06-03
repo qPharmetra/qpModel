@@ -4,16 +4,15 @@
 \alias{eqn_}
 \title{Convert Equation to a Call}
 \usage{
-eqn_(arg)
+eqn_(x)
 }
 \arguments{
-\item{arg}{an equation}
+\item{x}{an equation}
+}
+\value{
+eqn
 }
 \description{
-Converts an equation to a call.
-}
-\seealso{
-Other eqn: 
-\code{\link{eqn.make}()}
+Converts an equation to a call of class 'eqn'.
 }
 \concept{eqn}

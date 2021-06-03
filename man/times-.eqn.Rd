@@ -4,12 +4,12 @@
 \alias{*.eqn}
 \title{Multiply Equation}
 \usage{
-\method{*}{eqn}(eq1, eq2)
+\method{*}{eqn}(e1, e2)
 }
 \arguments{
-\item{eq1}{equation 1}
+\item{e1}{equation 1}
 
-\item{eq2}{equation 2}
+\item{e2}{equation 2}
 }
 \description{
 Multiplies equation.

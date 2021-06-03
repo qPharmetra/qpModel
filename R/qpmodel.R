@@ -70,41 +70,31 @@ eqns <- function(...){
   exprns <- enexprs(...)
   structure(list(calls = exprns), class = 'eqns')
 }
-#' Make an Equation
-#'
-#' Makes a single equation of class 'eqn'.
-#'
-#' @param arg instance of class 'call'
-#' @family eqn
-
-eqn.make <- function(arg) {
-  # arg is a class::call
-
-  # this creates a string from the call for operations
-  instring = deparse(arg)
-  structure(list(
-    call = arg,
-    instring = instring,
-    vars = all.vars(arg)
-  ),
-  class = 'eqn')
-}
 
 #' Convert Equation to a Call
 #'
-#' Converts an equation to a call.
+#' Converts an equation to a call of class 'eqn'.
 #'
-#' @param arg an equation
+#' @param x an equation
 #' @family eqn
+#' @return eqn
 #'
-eqn_ <- function(arg) {
+eqn_ <- function(x) {
   # arg is a expression
 
   # this converts arg into a call
-  arg$new <- arg
-  arg <- arg[[1]]
-  eqn.make(arg)
-  #structure(list(call = arg),class='eqn')
+  x$new <- x
+  x <- x[[1]]
+  instring <- deparse(x)
+  out <- structure(
+    list(
+      call = x,
+      instring = instring,
+      vars = all.vars(x)
+    ),
+    class = 'eqn'
+  )
+  out
 }
 
 #' Add to Equation
@@ -112,10 +102,10 @@ eqn_ <- function(arg) {
 #' Adds to equations.
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
-`+.eqn` <- function(eq1, eq2) {
-  neweq = parse(text = paste('(', eq1$instring, ')+(', eq2$instring, ')'))
+#' @param e1 equation 1
+#' @param e2 equation 2
+`+.eqn` <- function(e1, e2) {
+  neweq = parse(text = paste('(', e1$instring, ')+(', e2$instring, ')'))
   eqn_(neweq)
 
 }
@@ -125,10 +115,10 @@ eqn_ <- function(arg) {
 #' Subtracts from equations
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
-`-.eqn` <- function(eq1, eq2) {
-  neweq = parse(text = paste('(', eq1$instring, ')-(', eq2$instring, ')'))
+#' @param e1 equation 1
+#' @param e2 equation 2
+`-.eqn` <- function(e1, e2) {
+  neweq = parse(text = paste('(', e1$instring, ')-(', e2$instring, ')'))
   eqn_(neweq)
 
 }
@@ -138,10 +128,10 @@ eqn_ <- function(arg) {
 #' Multiplies equation.
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
-`*.eqn` <- function(eq1, eq2) {
-  neweq = parse(text = paste('(', eq1$instring, ')*(', eq2$instring, ')'))
+#' @param e1 equation 1
+#' @param e2 equation 2
+`*.eqn` <- function(e1, e2) {
+  neweq = parse(text = paste('(', e1$instring, ')*(', e2$instring, ')'))
   eqn_(neweq)
 
 }
@@ -151,10 +141,10 @@ eqn_ <- function(arg) {
 #' Divides equation.
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
-`/.eqn` <- function(eq1, eq2) {
-  neweq <- parse(text = paste('(', eq1$instring, ')/(', eq2$instring, ')'))
+#' @param e1 equation 1
+#' @param e2 equation 2
+`/.eqn` <- function(e1, e2) {
+  neweq <- parse(text = paste('(', e1$instring, ')/(', e2$instring, ')'))
   eqn_(neweq)
 
 
@@ -165,11 +155,11 @@ eqn_ <- function(arg) {
 #' Exponentiates equation.
 #' @export
 #' @family operators
-#' @param eq1 equation 1
-#' @param eq2 equation 2
+#' @param e1 equation 1
+#' @param e2 equation 2
 
-`^.eqn` <- function(eq1, eq2) {
-  neweq <- parse(text = paste('(', eq1$instring, ')^(', eq2$instring, ')'))
+`^.eqn` <- function(e1, e2) {
+  neweq <- parse(text = paste('(', e1$instring, ')^(', e2$instring, ')'))
   eqn_(neweq)
 
 }
