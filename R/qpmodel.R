@@ -3,11 +3,11 @@ globalVariables(c(
 'abs0', 'add', 'amax', 'cl', 'elim', 'etaCL', 'etaQ', 'etaQ2', 'etaV', 'etaV2', 'etaV3', 'etaamax', 'etacl',
 'etaf1', 'etak0', 'etak12', 'etak13', 'etak21', 'etak31', 'etaka', 'etaka50', 'etake', 'etakm50',
 'etakmax', 'etamtt', 'etantr', 'inpt', 'k0', 'k12', 'k13', 'k21', 'k31', 'ka', 'ka50', 'ke', 'km50', 'kmax',
-'prop', 'str_replace', 'tvCL', 'tvQ', 'tvQ2', 'tvV', 'tvV2', 'tvV3', 'tvamax', 'tvcl', 'tvf1', 'tvk0',
+'prop', 'tvCL', 'tvQ', 'tvQ2', 'tvV', 'tvV2', 'tvV3', 'tvamax', 'tvcl', 'tvf1', 'tvk0',
 'tvk12', 'tvk13', 'tvk21', 'tvk31', 'tvka', 'tvka50', 'tvke', 'tvkm50', 'tvkmax', 'tvmtt', 'tvntr'
 ))
 
-#' Create a qpModel
+#' Create a qpmodel
 
 #' Creates an object of class 'qpmodel', convertible
 #' to NONMEM code or mrgsolve code.
@@ -25,9 +25,9 @@ globalVariables(c(
 #' @export
 #' @family qpmodel
 #' @examples
-#' qpModel()
+#' qpmodel()
 #'
-qpModel <- function(
+qpmodel <- function(
   ode = eqns(),
   algebraic = eqns(),
   param = eqns(),
@@ -70,9 +70,6 @@ eqns <- function(...){
   exprns <- enexprs(...)
   structure(list(calls = exprns), class = 'eqns')
 }
-
-
-
 
 #' Add to Equations
 #'
@@ -124,14 +121,7 @@ eqns <- function(...){
 #' @param qp1 qpmodel 1
 #' @param qp2 qpmodel 2
 `+.qpmodel` <- function(qp1, qp2) {
-  #odesnew <- append(qp1$ode$calls,qp2$ode$calls)
-  #algebraicnew <- append(qp1$algebraic$calls,qp2$algebraic$calls)
-  #paramsnew <- append(qp1$param$calls,qp2$param$calls)
-  #thetanew <- append(qp1$theta$calls,qp2$theta$calls)
-  #omeganew <- append(qp1$omega$calls,qp2$omega$calls)
-  #sigmanew <- append(qp1$sigma$calls,qp2$sigma$calls)
-  qpnew <- qpModel()
-
+  qpnew <- qpmodel()
   qpnew$ode <- qp1$ode + qp2$ode
   qpnew$algebraic <- qp1$algebraic + qp2$algebraic
   qpnew$param <- qp1$param + qp2$param
@@ -143,7 +133,7 @@ eqns <- function(...){
   qpnew$global <- qp1$global + qp2$global
   qpnew$custom <- qp1$custom + qp2$custom
 
-  qpModel(
+  out <- qpmodel(
     qpnew$ode,
     qpnew$algebraic,
     qpnew$param,
@@ -155,6 +145,7 @@ eqns <- function(...){
     qpnew$global,
     qpnew$custom
   )
+  out
 }
 
 #' Muliply 'qpmodel'
@@ -166,14 +157,7 @@ eqns <- function(...){
 #' @param qp2 qpmodel 2
 
 `*.qpmodel` <- function(qp1, qp2) {
-  #odesnew <- append(qp1$ode$calls,qp2$ode$calls)
-  #algebraicnew <- append(qp1$algebraic$calls,qp2$algebraic$calls)
-  #paramsnew <- append(qp1$param$calls,qp2$param$calls)
-  #thetanew <- append(qp1$theta$calls,qp2$theta$calls)
-  #omeganew <- append(qp1$omega$calls,qp2$omega$calls)
-  #sigmanew <- append(qp1$sigma$calls,qp2$sigma$calls)
-  qpnew <- qpModel()
-
+  qpnew <- qpmodel()
   qpnew$ode <- qp1$ode * qp2$ode
   qpnew$algebraic <- qp1$algebraic * qp2$algebraic
   qpnew$param <- qp1$param * qp2$param
@@ -185,7 +169,7 @@ eqns <- function(...){
   qpnew$global <- qp1$global * qp2$global
   qpnew$custom <- qp1$custom * qp2$custom
 
-  qpModel(
+  out <- qpmodel(
     qpnew$ode,
     qpnew$algebraic,
     qpnew$param,
@@ -197,57 +181,49 @@ eqns <- function(...){
     qpnew$global,
     qpnew$custom
   )
+  out
 }
 
-#' View 'qpmodel'
+#' Print 'qpmodel'
 #'
-#' Views 'qpmodel'.
+#' Prints 'qpmodel'.  Calls format method.
+#'
+#' @param x qpmodel
+#' @param ... passed arguments
 #' @export
-#' @param qpmodel an object of class 'qpmodel'
 #' @family qpmodel
-modelView <- function(qpmodel = qpModel()) {
-  stopifnot(inherits(qpmodel, 'qpmodel'))
+#' @return used for side effects
+#' @examples
+#' qpmodel()
+print.qpmodel <- function(x, ...){
   # write out ode
   #print('ODEs:')
-  #print(paste(names(qpmodel$ode$calls),' = ',qpmodel$ode$calls))
-  ode <- data.frame('ODEs' = paste(names(qpmodel$ode$calls), ' = ', qpmodel$ode$calls))
+  ode <- data.frame(check.names = FALSE, ` ` = paste(names(x$ode$calls), ' = ', x$ode$calls))
 
   # write out relationships
-  #print('Algebraic eqns:')
-  #print(paste(names(qpmodel$algebraic$calls),' = ',qpmodel$algebraic$calls ))
-  algebra <- data.frame('Algebraic' = paste(
-    names(qpmodel$algebraic$calls),
+  algebra <- data.frame(check.names = FALSE, ` ` = paste(
+    names(x$algebraic$calls),
     ' = ',
-    qpmodel$algebraic$calls
+    x$algebraic$calls
   ))
 
   # write out parameters
-  #print('Parameters:')
-  #print(paste(names(qpmodel$param$calls),' = ',qpmodel$param$calls ))
-  param <- data.frame('Parameters' = paste(names(qpmodel$param$calls), ' = ', qpmodel$param$calls))
+  param <- data.frame(check.names = FALSE, ` ` = paste(names(x$param$calls), ' = ', x$param$calls))
 
   # write out fixed effect values
-  #print('Fixed Effect values:')
-  #print(paste(names(qpmodel$theta$calls),' = ',qpmodel$theta$calls ))
-  theta <- data.frame('Theta' = paste(names(qpmodel$theta$calls), ' = ', qpmodel$theta$calls))
+  theta <- data.frame(check.names = FALSE, ` ` = paste(names(x$theta$calls), ' = ', x$theta$calls))
 
   # write out omega values
-  #print('Omega:')
-  #print(paste(names(qpmodel$omega$calls),' = ',qpmodel$omega$calls ))
-  omega <- data.frame('Omega' = paste(names(qpmodel$omega$calls), ' = ', qpmodel$omega$calls))
+  omega <- data.frame(check.names = FALSE, ` ` = paste(names(x$omega$calls), ' = ', x$omega$calls))
 
   # write out observation info
-  #print('Observations:')
-  #print(paste(names(qpmodel$observe$calls),' = ',qpmodel$observe$calls ))
-  observe <- data.frame('Observe' = paste(names(qpmodel$observe$calls), ' = ', qpmodel$observe$calls))
+  observe <- data.frame(check.names = FALSE, ` ` = paste(names(x$observe$calls), ' = ', x$observe$calls))
 
   # write out error values
-  #print('Residual Error:')
-  #print(paste(names(qpmodel$sigma$calls),' = ',qpmodel$sigma$calls ))
-  sigma <- data.frame('Sigma' = paste(names(qpmodel$sigma$calls), ' = ', qpmodel$sigma$calls))
+  sigma <- data.frame(check.names = FALSE, ` ` = paste(names(x$sigma$calls), ' = ', x$sigma$calls))
 
   # write out output variables
-  output <- data.frame('Output' = paste(qpmodel$output$calls))
+  output <- data.frame(check.names = FALSE, ` ` = paste(x$output$calls))
 
   preview <- list(
     'ODEs' = ode,
@@ -259,49 +235,55 @@ modelView <- function(qpmodel = qpModel()) {
     'Sigma' = sigma,
     'Output' = output
   )
-
-  return(preview)
+  print(preview)
+  invisible(x)
 }
 
 #' Coerce to mrgsolve
 #'
-#' Coerces model to mrgsolve format
+#' Coerces to mrgsolve format.  Generic, with method \code{\link{as_mrgsolve.qpmodel}}.
 #'
-#' @param qpmodel class 'qpmodel'
-#' @param filename output filename
+#' @param x object of dispatch
+#' @param ... passed arguments
+#' @export
+#' @return class 'mrgsolve'
+as_mrgsolve <- function(x, ...)UseMethod('as_mrgsolve')
+#'
+#' Coerce qpmodel to mrgsolve
+#'
+#' Coerces qpmodel to mrgsolve format.
+#'
+#' @param x class 'qpmodel'
+#' @param ... ignored
+#' @family mrgsolve
+#' @return class 'mrgsolve' (character)
 #' @export
 #'
-modelCreate_R <- function(
-  qpmodel = qpModel(),
-  filename = 'model.txt'
-){
+as_mrgsolve.qpmodel <- function(x, ...){
   ## Create model text file
-  filemodel <- file(filename)
-
-  ## start writing model code for mrgsolve
-  #writeLines(c('modelfile =  '), filemodel)
+  z <- file()
 
   ## create parameter list
-  finalparams <- paste(names(qpmodel$theta$calls), '=', qpmodel$theta$calls)
+  finalparams <- paste(names(x$theta$calls), '=', x$theta$calls)
 
   ## create compartment list
-  finalcmts <- names(qpmodel$ode$calls)
+  finalcmts <- names(x$ode$calls)
 
   ## create main
   finalmain <- paste(
     'double',
-    names(qpmodel$param$calls),
+    names(x$param$calls),
     '=',
-    qpmodel$param$calls,
+    x$param$calls,
     ';'
   )
 
   ## create ODEs
   ode <- paste(
     'dxdt_',
-     names(qpmodel$ode$calls),
+     names(x$ode$calls),
      ' = ',
-     qpmodel$ode$calls,
+     x$ode$calls,
      ';',
      sep = ''
   )
@@ -309,61 +291,61 @@ modelCreate_R <- function(
   ## create Algebraic eqns
   algebra <- character(0)
 
-  if(length(qpmodel$algebraic$calls)){
+  if(length(x$algebraic$calls)){
     algebra <- paste(
       'double',
-      names(qpmodel$algebraic$calls),
+      names(x$algebraic$calls),
       '=',
-      qpmodel$algebraic$calls,
+      x$algebraic$calls,
       ';'
     )
   }
 
   ## create SIGMA
-  sigma <- paste(qpmodel$sigma$calls)
+  sigma <- paste(x$sigma$calls)
 
   ## create OMEGA
-  omega <- paste(qpmodel$omega$calls)
+  omega <- paste(x$omega$calls)
 
   ## create observation equations
-  if (is.null(qpmodel$observe$call)){
+  if (is.null(x$observe$call)){
     table <- NULL
   } else{
     table <- paste(
       'double',
-      names(qpmodel$observe$calls),
+      names(x$observe$calls),
       ' = ',
-      qpmodel$observe$calls,
+      x$observe$calls,
       ';'
     )
   }
 
   ## create table output
-  capture <- paste(qpmodel$output$calls)
+  capture <- paste(x$output$calls)
 
   ### TCAM components
 
   ## MAIN & ODE
-  if (is.null(qpmodel$custom$calls)) {
+  if (is.null(x$custom$calls)) {
     tcammain <- NULL
     tcamode <- NULL
   } else{
-    tcammain <- qpmodel$custom$calls$r.main
-    tcamode <- qpmodel$custom$calls$r.ode
+    tcammain <- x$custom$calls$r.main
+    tcamode <- x$custom$calls$r.ode
   }
 
   ## GLOBAL
-  if (is.null(qpmodel$global$calls)) {
+  if (is.null(x$global$calls)) {
     tcamglobe <- NULL
   } else{
-    tcamglobe <- qpmodel$global$calls$r
+    tcamglobe <- x$global$calls$r
   }
 
 
   #####  write components to file #####
 
   more <- function(x = '\n', sep = '\n', append = TRUE){
-    cat(x, file = filename, sep = sep, append = append)
+    cat(x, file = z, sep = sep, append = append)
   }
 
   # initialize the file
@@ -403,7 +385,7 @@ modelCreate_R <- function(
   if(length(omega)){
     more('$OMEGA @labels', sep = ' ')
     more(' ',sep = ' ')
-    more(names(qpmodel$omega$calls), sep = ' ')
+    more(names(x$omega$calls), sep = ' ')
     more()
     more(omega,sep = ' ')
     more()
@@ -422,7 +404,7 @@ modelCreate_R <- function(
   if(length(sigma)){
     more('$SIGMA @labels ', sep = ' ')
     more(' ', sep = ' ')
-    more(names(qpmodel$sigma$calls),sep = ' ')
+    more(names(x$sigma$calls),sep = ' ')
     more()
     more(sigma, sep = ' ')
     more()
@@ -441,28 +423,44 @@ modelCreate_R <- function(
     more(capture, sep = ' ')
     more('')
   }
-  close(filemodel)
+  out <- readLines(z)
+  out <- paste(out, collapse = '\n')
+  close(z)
+  class(out) <- 'mrgsolve'
+  out
 }
 
 #' Coerce to NONMEM
 #'
-#' Coerces model to NONMEM format
+#' Coerces to NONMEM format.  Generic, with method \code{\link{as_nonmem.qpmodel}}.
 #'
-#' @param qpmodel class 'qpmodel'
-#' @param filename output filename
+#' @param x object of dispatch
+#' @param ... passed arguments
 #' @export
+#' @return class 'nonmem': a file path for the NONMEM model code
+#' @examples
+#' # see methods
+as_nonmem <- function(x, ...)UseMethod('as_nonmem')
 #'
-modelCreate_NM <- function(
-  qpmodel = qpModel(),
-  filename = 'run1.mod'
-){
-  more <- function(x, sep = '\n')cat(x, file = filename, sep = sep, append = TRUE)
+#' Coerce to NONMEM
+#'
+#' Coerces qpmodel to NONMEM format.
+#'
+#' @param x class 'qpmodel'
+#' @param ... ignored
+#' @export
+#' @importFrom stringr str_replace
+#'
+as_nonmem.qpmodel <- function(x, ...){
+  more <- function(x = '\n', sep = '\n', append = TRUE){
+    cat(x, file = z, sep = sep, append = append)
+  }
 
   ## Create model text file
-  filemodelNM <- file(filename)
+  z <- file()
 
   ## start writing model code for NM file
-  writeLines(c('$PROBLEM'), filemodelNM)
+  writeLines(c('$PROBLEM'), z)
   more(';; 1. Based on:')
   more(';; 2. Description:')
   more(';; 3. Label:')
@@ -477,30 +475,30 @@ modelCreate_NM <- function(
   more('$SUBROUTINE ADVAN13 TOL=12')
 
   ## create compartment list
-  finalcmts <- names(qpmodel$ode$calls)
-  NMcmts <- paste('COMP', '(', names(qpmodel$ode$calls), ')')
+  finalcmts <- names(x$ode$calls)
+  NMcmts <- paste('COMP', '(', names(x$ode$calls), ')')
 
   ## create parameters using MU modeling
   theta_param <- paste(
-    names(qpmodel$theta$calls),
+    names(x$theta$calls),
     '=',
     'THETA(',
-    c(1:length(qpmodel$theta$calls)),
+    c(1:length(x$theta$calls)),
     ')',
     sep = ''
   )
   mu_params <- paste(
     'MU_',
-    c(1:length(qpmodel$theta$calls)),
+    c(1:length(x$theta$calls)),
     ' = ',
-    names(qpmodel$theta$calls),
+    names(x$theta$calls),
     sep = ''
   )
-  final_params <- paste(names(qpmodel$param$calls), ' = ', qpmodel$param$calls)
-  for (i in length(qpmodel$omega$calls):1) {
+  final_params <- paste(names(x$param$calls), ' = ', x$param$calls)
+  for (i in length(x$omega$calls):1) {
     final_params <- str_replace(
       final_params,
-      names(qpmodel$omega$calls[i]),
+      names(x$omega$calls[i]),
       paste('ETA(', i, ')', sep = '')
     )
   }
@@ -508,41 +506,41 @@ modelCreate_NM <- function(
   ## create ODEs
   states <- paste(
     'A(',
-    1:length(names(qpmodel$ode$calls)),
+    1:length(names(x$ode$calls)),
     ')',
     ' = ',
-    names(qpmodel$ode$calls),
+    names(x$ode$calls),
     sep = ''
   )
   algebra <- paste(
-    names(qpmodel$algebraic$calls),
+    names(x$algebraic$calls),
     ' = ',
-    qpmodel$algebraic$calls,
+    x$algebraic$calls,
     sep = ''
   )
   des <- paste(
     'DADT(',
-    1:length(names(qpmodel$ode$calls)),
+    1:length(names(x$ode$calls)),
     ')',
     ' = ',
-    qpmodel$ode$calls,
+    x$ode$calls,
     sep = ''
   )
 
   ### TCAM components
 
   ## MAIN & ODE
-  if (is.null(qpmodel$custom$calls)) {
+  if (is.null(x$custom$calls)) {
     tcamodenm <- NULL
   } else{
-    tcamodenm <- qpmodel$custom$calls$nm.ode
+    tcamodenm <- x$custom$calls$nm.ode
   }
 
   ## GLOBAL
-  if (is.null(qpmodel$global$calls)) {
+  if (is.null(x$global$calls)) {
     tcamglobenm <- NULL
   } else{
-    tcamglobenm <- qpmodel$global$calls$nm
+    tcamglobenm <- x$global$calls$nm
   }
 
   ## create ERROR block
@@ -581,17 +579,17 @@ modelCreate_NM <- function(
 
   ## write THETAs
   more('$THETA')
-  #more(qpmodel$theta$calls)
-  more(unlist(qpmodel$theta$calls))
+  #more(x$theta$calls)
+  more(unlist(x$theta$calls))
 
   ## write OMEGA
   more('$OMEGA')
-  #more(qpmodel$omega$calls)
-  more(unlist(qpmodel$omega$calls))
+  #more(x$omega$calls)
+  more(unlist(x$omega$calls))
 
   ## write SIGMA
   more('$SIGMA')
-  more(unlist(qpmodel$sigma$calls))
+  more(unlist(x$sigma$calls))
 
   ## write ESTIMATION
   more('$ESTIMATION METHOD=FOCE INTER NSIG=3 SIGL=9 MAXEVALS=9999 PRINT=10 NOABORT')
@@ -602,8 +600,11 @@ modelCreate_NM <- function(
   ## write TABLE
   more('$TABLE')
 
-  close(filemodelNM)
-
+  out <- readLines(z)
+  out <- paste(out, collapse = '\n')
+  close(z)
+  class(out) <- 'nonmem'
+  return(out)
 }
 
 ##### absorption models #####
@@ -619,7 +620,7 @@ qp.abs.zero.order <- function(
   theta = eqns(tvk0 = 1),
   omega = eqns(etak0 = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Aabs = -abs0),
     algebraic = eqns(abs0 = k0),
     param = eqns(k0 = exp(tvk0 + etak0)),
@@ -643,7 +644,7 @@ qp.abs.first.order <- function(
   theta = eqns(tvka = 1),
   omega = eqns(etaka = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Aabs = -abs0),
     algebraic = eqns(abs0 = ka * Aabs),
     param = eqns(ka = exp(tvka + etaka)),
@@ -665,7 +666,7 @@ qp.abs.zero.and.first.order <- function(
   theta = eqns(tvka = 1, tvk0 = 1),
   omega = eqns(etaka = 0, etak0 = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Aabs = -abs0),
     algebraic = eqns(abs0 = +ka * Aabs +
                        k0),
@@ -693,7 +694,7 @@ qp.abs.MM <- function(
   theta = eqns(tvamax = 1,tvka50 = 1),
   omega = eqns(etaka50 = 0, etaamax = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Aabs = -abs0),
     algebraic = eqns(abs0 = (amax * Aabs) / (ka50 + Aabs)),
     param = eqns(
@@ -725,7 +726,7 @@ qp.abs.TCAM <- function(
   theta  = eqns(tvmtt = 1, tvntr = 1, tvf1 = 0.1),
   omega = eqns(etamtt = 0, etantr = 0, etaf1 = 0)
 ){
-  qpModel(
+  qpmodel(
     param = eqns(
       MTT = exp(tvmtt + etamtt),
       NTR = exp(tvntr + etantr),
@@ -862,7 +863,7 @@ qp.elim <- function(
   theta = eqns(tvke = 1),
   omega = eqns(etake = 0)
 ){
-  qpModel(
+  qpmodel(
     algebraic = eqns(elim = -ke * Acentral),
     param = eqns(ke = exp(tvke + etake)),
     theta = eqns(tvke = 1),
@@ -883,7 +884,7 @@ qp.elim.clearance <- function(
   theta = eqns(tvCL = 1, tvV = 1),
   omega = eqns(etaCL = 0, etaV = 0)
 ){
-  qpModel(
+  qpmodel(
     algebraic = eqns(elim = -(CL / V) * Acentral),
     param = eqns(CL = exp(tvCL + etaCL),
                   V = exp(tvV + etaV)),
@@ -909,7 +910,7 @@ qp.elim.MM <- function(
   theta = eqns(tvkmax = 1, tvkm50 = 1),
   omega = eqns(etakmax = 0, etakm50 = 0)
 ){
-  qpModel(
+  qpmodel(
     algebraic = eqns(elim = -(kmax * Acentral) / (km50 + Acentral)),
     param = eqns(
       kmax = exp(tvkmax + etakmax),
@@ -940,7 +941,7 @@ qp.onecpt.iv.rate <- function(
   omega = eqns(etake = 0, etaV = 0),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Acentral = abs0 - elim),
     algebraic = eqns(abs0 = 0,
                      elim = ke * Acentral),
@@ -977,7 +978,7 @@ qp.onecpt.iv.cl <- function(
   omega = eqns(etacl = 0, etaV = 0),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Acentral = abs0 - elim),
     algebraic = eqns(abs0 = 0,
                      elim = (cl / V) * Acentral),
@@ -1014,7 +1015,7 @@ qp.onecpt.oral.rate <- function(
   omega = eqns(etake = 0, etaV = 0, tvka = 0),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Aabs = -abs0,
                 Acentral = abs0 - elim),
     algebraic = eqns(abs0 = ka * Aabs,
@@ -1054,7 +1055,7 @@ qp.onecpt.oral.cl <- function(
   omega = eqns(etacl = 0, etaV = 0, etaka = 0),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(Aabs = -abs0,
                 Acentral = abs0 - elim),
     algebraic = eqns(abs0 = ka * Aabs,
@@ -1106,7 +1107,7 @@ qp.twocpt.iv.rate <- function(
   sigma = eqns(
     add = 0, prop = 0)
 ){
-    qpModel(
+    qpmodel(
       ode = eqns(
         Acentral = abs0 - elim - k12 * Acentral + k21 * Aperiph,
         Aperiph = k12 * Acentral - k21 * Aperiph
@@ -1162,7 +1163,7 @@ qp.twocpt.iv.cl <- function(
   ),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Acentral = abs0 - elim - Q * (Acentral / V - Aperiph / V2),
       Aperiph = Q * (Acentral / V - Aperiph / V2)
@@ -1220,7 +1221,7 @@ qp.twocpt.oral.rate <- function(
   ),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Aabs = -abs0,
       Acentral = abs0 - elim - k12 * Acentral + k21 *
@@ -1284,7 +1285,7 @@ qp.twocpt.oral.cl <- function(
   ),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Aabs = -abs0,
       Acentral = abs0 - elim - Q * (Acentral / V - Aperiph /
@@ -1349,7 +1350,7 @@ qp.threecpt.iv.rate <- function(
   ),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Acentral = abs0 - elim - k12 * Acentral + k21 * Aperiph - k13 * Acentral + k31 *
         A2periph,
@@ -1415,7 +1416,7 @@ qp.threecpt.iv.cl <- function(
   ),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Acentral = abs0 - elim - Q * (Acentral / V - Aperiph / V2) - Q2 * (Acentral /
                                                                            V - A2periph / V3),
@@ -1483,7 +1484,7 @@ qp.threecpt.oral.rate <- function(
   ),
   sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Aabs = -abs0,
       Acentral = abs0 - elim - k12 * Acentral + k21 * Aperiph - k13 *
@@ -1557,7 +1558,7 @@ omega = eqns(
 ),
 sigma = eqns(add = 0, prop = 0)
 ){
-  qpModel(
+  qpmodel(
     ode = eqns(
       Aabs = -abs0,
       Acentral = abs0 - elim - Q * (Acentral / V - Aperiph /
@@ -1610,7 +1611,7 @@ sigma = eqns(add = 0, prop = 0)
 #' @family updates
 #' @param ... fixed effects
 theta <- function(...) {
-  qpModel(theta = eqns(...))
+  qpmodel(theta = eqns(...))
 }
 
 #' Update Omegas
@@ -1620,7 +1621,7 @@ theta <- function(...) {
 #' @family updates
 #' @param ... second level random effects
 omega <- function(...) {
-  qpModel(omega = eqns(...))
+  qpmodel(omega = eqns(...))
 }
 
 #' Update Sigmas
@@ -1630,7 +1631,7 @@ omega <- function(...) {
 #' @export
 #' @family updates
 sigma <- function(...) {
-  qpModel(sigma = eqns(...))
+  qpmodel(sigma = eqns(...))
 }
 
 #' Update Parameter Definitions
@@ -1640,7 +1641,7 @@ sigma <- function(...) {
 #' @family updates
 #' @param ... parameters
 parameter <- function(...) {
-  qpModel(param = eqns(...))
+  qpmodel(param = eqns(...))
 }
 
 #' Update ODE
@@ -1650,5 +1651,5 @@ parameter <- function(...) {
 #' @family updates
 #' @param ... ondinary differential equations
 ode <- function(...) {
-  qpModel(ode = eqns(...))
+  qpmodel(ode = eqns(...))
 }

@@ -28,7 +28,7 @@ This allows the user to custom define a model and turn it into a mrgsolve simula
 
 ```{r}
 
-baseModel <- qpModel(
+baseModel <- qpmodel(
   ode = eqns(
     Aabs = -ka*Aabs, 
     Acentral = ka*Aabs - (cl/V)*Acentral
@@ -60,6 +60,8 @@ baseModel <- qpModel(
   )
 )
 
+baseModel
+
 ```
 
 
@@ -67,39 +69,13 @@ Create a Rcpp model mrgsolve and load it.
 
 ```{r}
 
-modelCreate_R(baseModel)
+mrg <- baseModel %>% as_mrgsolve
 
-mod <- mread(model = "pkmodel",file = "model.txt")
+mod <- mread(model = "pkmodel", code = mrg)
 
-```
+# equivalently:
 
-Alternatively, model code (e.g., copied from 'model.txt') can
-be loaded directly using `mcode()`.
-
-```{r, include = FALSE}
-modelfile2 <- ' 
-$PARAM
-tvka = 0.2, tvcl = 1, tvV = 20
-$CMT Aabs Acentral
-$MAIN
-double ka = exp(tvka + etaka) ;
-double cl = exp(tvcl + etacl) ;
-double V = tvV + etaV ;
-$OMEGA @labels etaka etacl etaV
-0.1 0.2 0.3
-$ODE
-dxdt_Aabs = -ka * Aabs;
-dxdt_Acentral = ka * Aabs - (cl/V) * Acentral;
-$SIGMA @labels  ADD PROP
-0.2 0.2
-$TABLE
-double IPRED  =  Acentral/V ;
-double DV  =  IPRED * (1 + PROP) + ADD ;
-$CAPTURE IPRED DV etacl
-'
-
-modcopy <- mcode("pkmodel2",modelfile2)
-
+mod <- 'pkmodel' %>% mcode(mrg)
 
 ```
 
@@ -165,9 +141,9 @@ model <-
     etaka50 = 0.1
   ) 
 
-modelCreate_R(model,filename = "combine.txt")
+mrg <- model %>% as_mrgsolve
 
-modnew <- mread(model = "pkmodel2",file = "combine.txt")
+modnew <- 'pkmodel2' %>% mcode(mrg)
 
 ```
 ## Simulate
@@ -223,9 +199,9 @@ tcammodel <-
     tvf1 = 0.9
   )
 
-modelCreate_R(tcammodel,filename = "tcam.txt")
+mrg <- tcammodel %>% as_mrgsolve
 
-tcammod <- mread(model = "tcam",file = "tcam.txt")
+tcammod <- 'tcam' %>% mcode(mrg)
 
 ```
 
@@ -259,7 +235,7 @@ out <- tcammod %>%
 ```{r}
 
 ggplot(out,aes(x=time,y=IPRED,group=ID)) + 
-  geom_point() + 
+  #geom_point() + 
   geom_line() + 
   theme_bw() + 
   xlab("Time (hr)") + 
@@ -290,9 +266,13 @@ threecpt <-
   ) + 
   qp.abs.zero.and.first.order()
 
-modelCreate_R(threecpt,filename = "threecpt.txt")
+# just for fun, how would this look as NONMEM code?
+threecpt %>% as_nonmem %>% writeLines
 
-threecptmod <- mread(model = "threecpt",file = "threecpt.txt")
+# back to simulation ...
+mrg <- threecpt %>% as_mrgsolve
+
+threecptmod <- 'threecpt' %>% mcode(mrg)
 
 ```
 
