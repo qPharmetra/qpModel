@@ -20,6 +20,9 @@ qp.onecpt.iv.cl(
 \description{
 One compartment IV clearance model.
 }
+\examples{
+qp.onecpt.iv.cl()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

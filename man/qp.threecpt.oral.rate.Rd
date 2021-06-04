@@ -21,6 +21,9 @@ qp.threecpt.oral.rate(
 \description{
 Three compartment oral rate model.
 }
+\examples{
+qp.threecpt.oral.rate()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

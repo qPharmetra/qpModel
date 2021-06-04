@@ -14,6 +14,9 @@ qp.elim(theta = eqns(tvke = 1), omega = eqns(etake = 0))
 \description{
 Elimination model.
 }
+\examples{
+qp.elim()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

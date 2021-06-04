@@ -21,6 +21,9 @@ qp.threecpt.oral.cl(
 \description{
 Three compartment oral clearance model.
 }
+\examples{
+qp.threecpt.oral.cl()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

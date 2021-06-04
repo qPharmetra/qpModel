@@ -2,22 +2,42 @@
 % Please edit documentation in R/qpmodel.R
 \name{+.qpmodel}
 \alias{+.qpmodel}
-\title{Add 'qpmodel'}
+\title{Add Models}
 \usage{
 \method{+}{qpmodel}(qp1, qp2)
 }
 \arguments{
 \item{qp1}{qpmodel 1}
 
-\item{qp2}{qpmodel 2}
+\item{qp2}{qpmodel 2
+twocpt <- qp.twocpt.iv.cl()
+absMM <- qp.abs.MM()
+
+model <-
+  twocpt +
+  absMM +
+  theta(
+    tvV = 2,
+    tvCL = 3,
+    tvQ = 0.5,
+    tvV2 = 0.1,
+    tvamax = 0.35,
+    tvka50 = 0.05
+  ) +
+  omega(
+    etaV = 0.1,
+    etaCL = 0.2,
+    etaQ = 0,
+    etaV2 = 0,
+    etaamax = 0,
+    etaka50 = 0.1
+  )}
 }
 \description{
-Adds 'qpmodel'.
+Systematically combines the features of two models.
 }
 \seealso{
 Other operators: 
-\code{\link{*.eqns}()},
-\code{\link{*.qpmodel}()},
 \code{\link{+.eqns}()}
 }
 \concept{operators}

@@ -20,6 +20,9 @@ qp.twocpt.oral.rate(
 \description{
 Two compartment oral rate model.
 }
+\examples{
+qp.twocpt.oral.rate()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

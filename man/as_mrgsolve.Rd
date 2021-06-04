@@ -17,3 +17,6 @@ class 'mrgsolve'
 \description{
 Coerces to mrgsolve format.  Generic, with method \code{\link{as_mrgsolve.qpmodel}}.
 }
+\examples{
+example(as_mrgsolve.qpmodel)
+}

@@ -20,6 +20,9 @@ qp.abs.TCAM(
 \description{
 Transit compartment absorption model (TCAM).
 }
+\examples{
+qp.abs.TCAM()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

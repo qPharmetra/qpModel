@@ -20,6 +20,9 @@ qp.onecpt.oral.cl(
 \description{
 One compartment oral clearance model.
 }
+\examples{
+qp.onecpt.oral.cl()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

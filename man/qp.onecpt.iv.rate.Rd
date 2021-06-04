@@ -20,6 +20,9 @@ qp.onecpt.iv.rate(
 \description{
 One compartment IV model estimating infusion rate.
 }
+\examples{
+qp.onecpt.iv.rate()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

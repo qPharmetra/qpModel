@@ -14,6 +14,9 @@ qp.abs.first.order(theta = eqns(tvka = 1), omega = eqns(etaka = 0))
 \description{
 First order absorption.
 }
+\examples{
+qp.abs.first.order()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

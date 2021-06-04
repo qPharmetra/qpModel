@@ -17,6 +17,9 @@ qp.elim.clearance(
 \description{
 Clearance model.
 }
+\examples{
+qp.elim.clearance()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

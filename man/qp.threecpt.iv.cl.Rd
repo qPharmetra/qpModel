@@ -20,6 +20,9 @@ qp.threecpt.iv.cl(
 \description{
 Three compartment IV clearance model.
 }
+\examples{
+qp.threecpt.iv.cl()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

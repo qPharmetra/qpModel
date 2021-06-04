@@ -14,3 +14,6 @@
 \description{
 Coerces qpmodel to NONMEM format.
 }
+\examples{
+writeLines(as_nonmem(qpmodel(ode = eqns(Aabs = -ka*Aabs))))
+}

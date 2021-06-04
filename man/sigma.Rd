@@ -12,6 +12,9 @@ sigma(...)
 \description{
 Updates sigma.
 }
+\examples{
+sigma()
+}
 \seealso{
 Other updates: 
 \code{\link{ode}()},

@@ -15,10 +15,10 @@
 used for side effects
 }
 \description{
-Prints 'qpmodel'.  Calls format method.
+Prints 'qpmodel'.
 }
 \examples{
-qpmodel()
+qpmodel(ode = eqns(Aabs = -ka*Aabs))
 }
 \seealso{
 Other qpmodel: 

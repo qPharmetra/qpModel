@@ -2,22 +2,25 @@
 % Please edit documentation in R/qpmodel.R
 \name{+.eqns}
 \alias{+.eqns}
-\title{Add to Equations}
+\title{Add Equations}
 \usage{
-\method{+}{eqns}(eqns1, eqns2)
+\method{+}{eqns}(e1, e2)
 }
 \arguments{
-\item{eqns1}{equation 1}
+\item{e1}{equation 1}
 
-\item{eqns2}{equation 2}
+\item{e2}{equation 2}
 }
 \description{
-Adds to equations.
+Combines sets of equations. Where LHS matches,
+the equation in the first argument is replaced with
+the corresponding equation in the second argument.
+}
+\examples{
+eqns(ka = exp(tvka+etaka)) + eqns(cl = exp(tvcl+etacl))
 }
 \seealso{
 Other operators: 
-\code{\link{*.eqns}()},
-\code{\link{*.qpmodel}()},
 \code{\link{+.qpmodel}()}
 }
 \concept{operators}

@@ -17,6 +17,9 @@ qp.abs.MM(
 \description{
 Michaelis-Menten absorption.
 }
+\examples{
+qp.abs.MM()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.TCAM}()},

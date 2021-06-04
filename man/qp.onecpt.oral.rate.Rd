@@ -20,6 +20,9 @@ qp.onecpt.oral.rate(
 \description{
 One compartment oral fixed rate clearance model.
 }
+\examples{
+qp.onecpt.oral.rate()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

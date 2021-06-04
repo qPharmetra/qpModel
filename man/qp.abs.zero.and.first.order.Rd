@@ -17,6 +17,9 @@ qp.abs.zero.and.first.order(
 \description{
 zero and first order absorption.
 }
+\examples{
+qp.abs.zero.and.first.order()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

@@ -46,7 +46,37 @@ Creates an object of class 'qpmodel', convertible
 to NONMEM code or mrgsolve code.
 }
 \examples{
-qpmodel()
+baseModel <- qpmodel(
+  ode = eqns(
+    Aabs = -ka*Aabs,
+    Acentral = ka*Aabs - (cl/V)*Acentral
+  ),
+  param = eqns(
+    ka = exp(tvka+etaka),
+    cl = exp(tvcl+etacl),
+    V = tvV + etaV
+  ),
+  theta = eqns(
+    tvka = 0.2,
+    tvcl = 1,
+    tvV = 20
+  ),
+  omega = eqns(
+    etaka = 0.1,
+    etacl = 0.2,
+    etaV = 0.3
+  ),
+  sigma = eqns(
+    ADD = 0.2,
+    PROP = 0.2
+  ),
+  observe = eqns(
+    IPRED = Acentral/V, DV = IPRED*(1+PROP)+ADD
+  ),
+  output = eqns(
+    IPRED, DV
+  )
+)
 
 }
 \seealso{

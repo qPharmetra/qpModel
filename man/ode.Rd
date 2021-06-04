@@ -12,6 +12,9 @@ ode(...)
 \description{
 Updates ODEs.
 }
+\examples{
+ode()
+}
 \seealso{
 Other updates: 
 \code{\link{omega}()},

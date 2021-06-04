@@ -17,6 +17,9 @@ qp.elim.MM(
 \description{
 Micahaelis-Menten clearance model.
 }
+\examples{
+qp.elim.MM()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

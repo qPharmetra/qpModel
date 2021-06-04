@@ -20,6 +20,9 @@ qp.threecpt.iv.rate(
 \description{
 Three compartment IV rate model.
 }
+\examples{
+qp.threecpt.iv.rate()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

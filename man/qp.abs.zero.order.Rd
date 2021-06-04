@@ -14,6 +14,9 @@ qp.abs.zero.order(theta = eqns(tvk0 = 1), omega = eqns(etak0 = 0))
 \description{
 zero order absorption.
 }
+\examples{
+qp.abs.zero.order()
+}
 \seealso{
 Other models: 
 \code{\link{qp.abs.MM}()},

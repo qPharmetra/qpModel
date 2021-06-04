@@ -13,6 +13,9 @@ eqns(...)
 Generates equations. See vignettes.
 }
 \examples{
-eqns()
+ode <- eqns(
+  Aabs = -ka*Aabs,
+  Acentral = ka*Aabs - (cl/V)*Acentral
+)
 }
 \concept{eqns}

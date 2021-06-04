@@ -12,6 +12,9 @@ parameter(...)
 \description{
 Updates parameter definitions.
 }
+\examples{
+parameter()
+}
 \seealso{
 Other updates: 
 \code{\link{ode}()},

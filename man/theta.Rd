@@ -12,6 +12,9 @@ theta(...)
 \description{
 Updates theta.
 }
+\examples{
+theta()
+}
 \seealso{
 Other updates: 
 \code{\link{ode}()},

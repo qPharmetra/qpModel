@@ -17,4 +17,7 @@ class 'mrgsolve' (character)
 \description{
 Coerces qpmodel to mrgsolve format.
 }
+\examples{
+writeLines(as_mrgsolve(qpmodel(ode = eqns(Aabs = -ka*Aabs))))
+}
 \concept{mrgsolve}
